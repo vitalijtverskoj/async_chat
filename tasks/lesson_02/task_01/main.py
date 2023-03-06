@@ -59,7 +59,7 @@ def get_data():
         j += 1
     return main_data
 
-def write_to_csv():
+def write_to_csv(out_file):
 
     main_data = get_data()
     with open(out_file, 'w', encoding='utf-8') as file:
