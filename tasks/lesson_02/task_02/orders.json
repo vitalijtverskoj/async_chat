@@ -1,0 +1,11 @@
+{
+    "orders": [
+        {
+            "item": "motherboard",
+            "quantity": "5",
+            "price": "4999",
+            "buyer": "Sergey",
+            "date": "01.02.2023"
+        }
+    ]
+}
