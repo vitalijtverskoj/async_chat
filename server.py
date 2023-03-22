@@ -2,9 +2,13 @@ import os
 from socket import AF_INET, SOCK_STREAM, socket
 import sys
 from utils import send_message, get_message
+import logging
+import log.config_server_log
 
+serv_logger = logging.getLogger('server')
 
 def parse_message(message):
+    serv_logger.info(f'Разбор сообщения от клиента : {message}')
     if os.getenv('ACTION') in message \
             and message[os.getenv('ACTION')] == os.getenv('PRESENCE') \
             and os.getenv('TIME') in message \
@@ -22,14 +26,15 @@ def main():
     try:
         if sys.argv[1] == '-a' and sys.argv[3] == '-p':
             head, a, server_address, p, server_port, *tail = sys.argv
-            print(f'Сервер запущен с адресом {server_address} на {server_port} порту\n'
+            
+            serv_logger.info(f'Сервер запущен с адресом {server_address} на {server_port} порту\n'
                   f'Для выхода нажмите CTRL+C')
         else:
             raise NameError
     except (IndexError, NameError):
         server_address = ''
         server_port = os.getenv('DEFAULT_PORT')
-        print(f'Сервер запущен с настройками по умолчанию на {server_port} порту.\n'
+        serv_logger.info(f'Сервер запущен с настройками по умолчанию на {server_port} порту.\n'
               f'Для более точной кнфигурации задайте адресс и порт сервера: '
               f'$ python3 server.py -a [ip-адрес] -p [порт сервера]\n\n'
               f'Для выхода нажмите CTRL+C\n')
@@ -45,7 +50,7 @@ def main():
         send_message(client, response)
         client.close()
 
-        print(f'Запрос от клиента: {message}\n'
+        serv_logger.info(f'Запрос от клиента: {message}\n'
               f'Код ответа для клиента: {response}')
 
 
