@@ -4,9 +4,25 @@ import sys
 from utils import send_message, get_message
 import logging
 import log.config_server_log
+import inspect
 
 serv_logger = logging.getLogger('server')
 
+enable_tracing = True
+
+def log(func):
+    if enable_tracing:
+        def callf(*args,**kwargs):
+            serv_logger.info(f'Функция {func.__name__}: вызвана из функции  {inspect.stack()[1][3]}')
+            r = func(*args, **kwargs)
+            serv_logger.info(f'{func.__name__} вернула {r}')
+            return r
+        return callf
+    else:
+        return func
+
+
+@log
 def parse_message(message):
     serv_logger.info(f'Разбор сообщения от клиента : {message}')
     if os.getenv('ACTION') in message \
